@@ -27,7 +27,25 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
   // find a single product by its `id`
   // be sure to include its associated Category and Tag data
+  Product.findOne({
+    where: {
+      id: req.params.id
+    },
+    include: [
+      Category,
+      {
+        model: Tag,
+        through: ProductTag
+      }
+    ]
+  })
+  .then(idData => res.json(idData))
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
 });
+  
 
 // create new product
 router.post('/', (req, res) => {
